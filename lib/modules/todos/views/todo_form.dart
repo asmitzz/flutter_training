@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/main.dart';
-import 'package:flutter_training/models/todo_model.dart';
+import 'package:flutter_training/modules/todos/models/todo_model.dart';
+
 import 'package:flutter_training/modules/todos/provider/todos_provider.dart';
 
 class TodoForm extends StatefulWidget {
@@ -14,9 +15,32 @@ class _TodoFormState extends State<TodoForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String title = "";
 
+  void initState() {
+    super.initState();
+    print("Form : initState");
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("Form : dependency changed");
+    super.didChangeDependencies();
+  }
+
+  @override
+  void deactivate() {
+    print("Form : Deactivate widget");
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    print("Form : dispose widget");
+    super.dispose();
+  }
+
   _onPressed() {
     final todosProvider = TodoProvider.of(context);
-    TodoModel todo = TodoModel(id:UniqueKey().toString(),title: title);
+    TodoModel todo = TodoModel(id: UniqueKey().toString(), title: title);
     if (_formKey.currentState!.validate()) {
       todosProvider!.addTodo(todo);
       navigatorKey.currentState!.pop("/");
@@ -25,6 +49,7 @@ class _TodoFormState extends State<TodoForm> {
 
   @override
   Widget build(BuildContext context) {
+    print("Form : widget build");
     return Scaffold(
       appBar: AppBar(
         // The title text which will be shown on the action bar

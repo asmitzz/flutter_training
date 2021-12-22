@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/models/todo_model.dart';
+import 'package:flutter_training/modules/todos/models/todo_model.dart';
 
 class TodoProvider extends InheritedWidget {
   final List<TodoModel> todos;
   final Function addTodo;
   final Function removeTodo;
+  final Function fetchTodos;
 
   const TodoProvider({
     Key? key,
     required Widget child,
+    required this.fetchTodos,
     required this.todos,
     required this.addTodo,
     required this.removeTodo,

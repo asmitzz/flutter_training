@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/models/todo_model.dart';
+import 'package:flutter_training/modules/todos/models/todo_model.dart';
+
 import 'package:flutter_training/modules/todos/provider/todos_provider.dart';
 
 class TodoCard extends StatefulWidget {
@@ -13,11 +14,12 @@ class TodoCard extends StatefulWidget {
 
 class _TodoCardState extends State<TodoCard> {
   bool extend = false;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       curve: Curves.easeInCubic,
-      padding:const EdgeInsets.symmetric(horizontal: 20.0) ,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       height: extend ? 100.0 : 50.0,
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       duration: const Duration(milliseconds: 300),
@@ -42,9 +44,7 @@ class _TodoCardState extends State<TodoCard> {
               IconButton(
                   onPressed: () {
                     extend = !extend;
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                   icon: Icon(
                     extend ? Icons.close_fullscreen : Icons.fullscreen,
