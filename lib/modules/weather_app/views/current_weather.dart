@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_training/utils/debounce.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_training/modules/weather_app/models/weather_model.dart';
@@ -13,7 +14,9 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
   late Weather _weather;
   String cityName = "jabalpur";
 
-  _onChanged(value) {
+  final _debouncer = Debouncer();
+
+  _onChanged(value) async {
     cityName = value;
     setState(() {});
   }
@@ -29,19 +32,21 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
           TextFormField(
             decoration: const InputDecoration(
                 labelText: "City", hintText: "Enter city name"),
-            onChanged: _onChanged,
+            onChanged: (value) => _debouncer.call(() {
+              _onChanged(value);
+            }),
           ),
           FutureBuilder(
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.hasData) {
-                _weather = snapshot.data;
-                if (snapshot.hasError) {
-                  return const Text("Error getting weather");
-                } else {
-                  return weatherBox(_weather);
-                }
-              } else {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                _weather = snapshot.data;
+                return weatherBox(_weather);
+              } else if (snapshot.hasError) {
+                return const Text("Error getting weather");
+              } else {
+                return const Text("No results found");
               }
             },
             future: getCurrentWeather(cityName),
