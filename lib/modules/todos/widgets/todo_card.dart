@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_training/modules/todos/cubit/todos_cubit.dart';
 import 'package:flutter_training/modules/todos/models/todo_model.dart';
 
 import 'package:flutter_training/modules/todos/provider/todos_provider.dart';
@@ -24,35 +26,39 @@ class _TodoCardState extends State<TodoCard> {
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       duration: const Duration(milliseconds: 300),
       color: Colors.blueAccent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            widget.todo.title,
-            style: const TextStyle(color: Colors.white),
-          ),
-          Row(
+      child: BlocBuilder<TodosCubit, List<TodoModel>>(
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                  onPressed: () {
-                    TodoProvider.of(context)!.removeTodo(widget.todo.id);
-                  },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.redAccent,
-                  )),
-              IconButton(
-                  onPressed: () {
-                    extend = !extend;
-                    setState(() {});
-                  },
-                  icon: Icon(
-                    extend ? Icons.close_fullscreen : Icons.fullscreen,
-                    color: Colors.white,
-                  ))
+              Text(
+                widget.todo.title,
+                style: const TextStyle(color: Colors.white),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        context.read<TodosCubit>().removeTodo(widget.todo.id);
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.redAccent,
+                      )),
+                  IconButton(
+                      onPressed: () {
+                        extend = !extend;
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        extend ? Icons.close_fullscreen : Icons.fullscreen,
+                        color: Colors.white,
+                      ))
+                ],
+              )
             ],
-          )
-        ],
+          );
+        },
       ),
     );
   }

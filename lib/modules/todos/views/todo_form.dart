@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_training/main.dart';
+import 'package:flutter_training/modules/todos/cubit/todos_cubit.dart';
 import 'package:flutter_training/modules/todos/models/todo_model.dart';
 
 import 'package:flutter_training/modules/todos/provider/todos_provider.dart';
@@ -38,11 +40,11 @@ class _TodoFormState extends State<TodoForm> {
     super.dispose();
   }
 
-  _onPressed() {
-    final todosProvider = TodoProvider.of(context);
+  _onPressed(BuildContext context) {
+    final todosProvider = context.read<TodosCubit>();
     TodoModel todo = TodoModel(id: UniqueKey().toString(), title: title);
     if (_formKey.currentState!.validate()) {
-      todosProvider!.addTodo(todo);
+      todosProvider.addTodo(todo);
       navigatorKey.currentState!.pop("/");
     }
   }
@@ -78,9 +80,13 @@ class _TodoFormState extends State<TodoForm> {
                     setState(() {});
                   },
                 ),
-                ElevatedButton(
-                  onPressed: _onPressed,
-                  child: const Text("Add"),
+                BlocBuilder<TodosCubit, List<TodoModel>>(
+                  builder: (context, state) {
+                    return ElevatedButton(
+                      onPressed: () => _onPressed(context),
+                      child: const Text("Add"),
+                    );
+                  },
                 )
               ],
             ),
